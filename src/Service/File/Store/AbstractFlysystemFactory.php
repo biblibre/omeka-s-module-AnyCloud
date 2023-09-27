@@ -4,6 +4,7 @@ namespace AnyCloud\Service\File\Store;
 
 use AnyCloud\File\Store\Flysystem;
 use Interop\Container\ContainerInterface;
+use Laminas\Log\LoggerAwareInterface;
 use Laminas\ServiceManager\Factory\FactoryInterface;
 use League\Flysystem\Filesystem;
 use League\Flysystem\FilesystemAdapter;
@@ -19,6 +20,9 @@ abstract class AbstractFlysystemFactory implements FactoryInterface
     {
         $config = $this->getConfig($container);
         $store = $this->getStore($config);
+        if ($store instanceof LoggerAwareInterface) {
+            $store->setLogger($container->get('Omeka\Logger'));
+        }
 
         return $store;
     }
